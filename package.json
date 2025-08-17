@@ -1,0 +1,6 @@
+{
+  "name": "shitscripts",
+  "dependencies": {
+    "openai": "^4.26.0"
+  }
+}

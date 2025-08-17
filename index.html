@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shit Scripts Generator</title>
+  <style>
+    body {
+      font-family: monospace;
+      background-color: #111;
+      color: #f8f8f2;
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 {
+      color: #ff79c6;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      color: #8be9fd;
+    }
+    input, button {
+      font-family: inherit;
+      font-size: 1rem;
+      padding: 0.5rem;
+      margin-top: 0.3rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #50fa7b;
+      border: none;
+      color: #000;
+      margin-top: 2rem;
+      cursor: pointer;
+    }
+    pre {
+      background-color: #282a36;
+      padding: 1rem;
+      margin-top: 2rem;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>Shit Scripts Generator</h1>
+
+  <form id="scriptForm">
+    <label for="input1">Main Idiot's Name:</label>
+    <input type="text" id="input1" required>
+
+    <label for="input2">Unhinged Sidekick:</label>
+    <input type="text" id="input2" required>
+
+    <label for="input3">Chaotic Location:</label>
+    <input type="text" id="input3" required>
+
+    <label for="input4">Cursed Object:</label>
+    <input type="text" id="input4" required>
+
+    <button type="submit">Summon the Nonsense</button>
+  </form>
+
+  <pre id="output"></pre>
+
+  <script>
+    const form = document.getElementById("scriptForm");
+    const output = document.getElementById("output");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const char1 = document.getElementById("input1").value;
+      const char2 = document.getElementById("input2").value;
+      const location = document.getElementById("input3").value;
+      const object = document.getElementById("input4").value;
+
+      output.textContent = "Generating chaotic nonsense...";
+
+      try {
+        const response = await fetch("/.netlify/functions/generateScript", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ char1, char2, location, object }),
+        });
+
+        const data = await response.json();
+        output.textContent = data.script || "No chaos returned.";
+      } catch (err) {
+        output.textContent = "Something exploded. Try again.";
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>
