@@ -95,6 +95,26 @@
       margin-bottom: 0.25rem;
       margin-top: 1rem;
     }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      .left, .center, .right {
+        width: 100%;
+        border: none;
+        padding: 1rem;
+      }
+      form {
+        margin-top: 2rem;
+      }
+      #downloadBtn {
+        position: static;
+        transform: none;
+        margin: 2rem auto 0 auto;
+        display: block;
+      }
+    }
   </style>
 </head>
 <body>
