@@ -1,49 +1,52 @@
-const OpenAI = require("openai");
+const { OpenAI } = require("openai");
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 exports.handler = async (event) => {
-  if (event.httpMethod !== "POST") {
-    return {
-      statusCode: 405,
-      body: "Method Not Allowed",
-    };
-  }
-
-  const { char1, char2, location, object } = JSON.parse(event.body);
-
-  console.log("Received inputs:", char1, char2, location, object);
-
-  const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
-
-  const prompt = `You're a deranged screenwriter. Write a hilariously awful, chaotic, poorly written 15-line movie script. Use the following details:
-
-Character 1: ${char1}
-Character 2: ${char2}
-Location: ${location}
-Object: ${object}
-
-The script should include absurd plot twists, surreal dialogue, and over-the-top formatting. Make it completely unhinged and ridiculous.`;
-
   try {
-    const completion = await openai.chat.completions.create({
+    const { char1, char2, location, object, customPrompt, promptType } = JSON.parse(event.body);
+
+    console.log("Received inputs:", char1, char2, location, object, promptType);
+
+    // Fallback to default if no type passed
+    const type = promptType || "default";
+
+    const categoryInstructions = {
+      default: "Write a chaotic, unhinged and hilarious short film script with no regard for structure or sense. Keep it weird.",
+      romcom: "Write a parody rom-com short film script. Full of misunderstandings, awkward flirting, and at least one food fight.",
+      thriller: "Write a chaotic, over-the-top thriller script. Include betrayal, shouting, and several implausible plot twists.",
+      fantasy: "Write an absurd fantasy script. Dragons, cursed swords, maybe a talking goat. Go wild.",
+    };
+
+    const systemPrompt = categoryInstructions[type] || categoryInstructions["default"];
+
+    const userPrompt = customPrompt?.trim()
+      ? customPrompt
+      : `Create a short, ridiculous script featuring ${char1} and ${char2} at ${location} involving a cursed ${object}. Make it unhinged.`
+
+    const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 1.2,
-      max_tokens: 400,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt }
+      ],
+      temperature: 0.95,
+      max_tokens: 1000,
     });
 
-    const script = completion.choices[0].message.content;
+    const script = response.choices?.[0]?.message?.content;
 
     return {
       statusCode: 200,
       body: JSON.stringify({ script }),
     };
-  } catch (error) {
-    console.error("OpenAI API error:", error);
+  } catch (err) {
+    console.error("OpenAI API error:", err);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Failed to generate script." }),
+      body: JSON.stringify({ error: "Something went wrong." }),
     };
   }
 };
