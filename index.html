@@ -198,16 +198,26 @@
       }
     });
 
-    downloadBtn.addEventListener("click", () => {
-      const text = output.textContent;
-      const blob = new Blob([text], { type: "text/plain" });
-      const url = URL.createObjectURL(blob);
+    downloadBtn.addEventListener("click", async () => {
+     try {
+       const response = await fetch("/.netlify/functions/generatePDF", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ script: latestScript }),
+      });
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "shitscript.txt";
+      a.download = "shitscript.pdf";
       a.click();
-      URL.revokeObjectURL(url);
-    });
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("PDF download failed", err);
+      alert("Failed to download the script as a PDF.");
+    }
+  });
   </script>
 </body>
 </html>
