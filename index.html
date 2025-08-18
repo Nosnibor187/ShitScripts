@@ -170,6 +170,8 @@
     const logo = document.getElementById("mainLogo");
     const downloadBtn = document.getElementById("downloadBtn");
 
+    let latestScript = "";
+
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -192,6 +194,7 @@
 
         const data = await response.json();
         output.textContent = data.script || "No chaos returned.";
+        latestScript = data.script || "No chaos returned.";
       } catch (err) {
         output.textContent = "Something exploded. Try again.";
         console.error(err);
@@ -199,25 +202,25 @@
     });
 
     downloadBtn.addEventListener("click", async () => {
-     try {
-       const response = await fetch("/.netlify/functions/generatePDF", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ script: latestScript }),
-      });
+      try {
+        const response = await fetch("/.netlify/functions/generatePDF", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ script: latestScript }),
+        });
 
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "shitscript.pdf";
-      a.click();
-      window.URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error("PDF download failed", err);
-      alert("Failed to download the script as a PDF.");
-    }
-  });
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "shitscript.pdf";
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } catch (err) {
+        console.error("PDF download failed", err);
+        alert("Failed to download the script as a PDF.");
+      }
+    });
   </script>
 </body>
 </html>
