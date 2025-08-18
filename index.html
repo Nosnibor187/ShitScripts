@@ -19,6 +19,7 @@
       display: flex;
       flex: 1;
       height: 100%;
+      position: relative;
     }
     .column {
       flex: 1;
@@ -37,6 +38,8 @@
       position: relative;
       flex-direction: column;
       text-align: center;
+      border-left: 2px solid #000;
+      border-right: 2px solid #000;
     }
     .logo {
       max-width: 100%;
@@ -60,6 +63,9 @@
       padding: 0.5rem;
       border: 1px solid #ccc;
     }
+    form {
+      margin-top: 6rem;
+    }
     button {
       padding: 0.5rem 1rem;
       font-size: 1rem;
@@ -67,12 +73,30 @@
       border: none;
       cursor: pointer;
     }
+    #downloadBtn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-30%, -50%);
+    }
     footer {
       text-align: center;
       padding: 1rem;
+      position: relative;
     }
     .footer-logo {
       width: 40px;
+      margin-top: 0.5rem;
+    }
+    .footer-above-logo {
+      width: 60px;
+      display: block;
+      margin: 0 auto 1rem auto;
+    }
+    label {
+      font-size: 0.9rem;
+      display: block;
+      margin-bottom: 0.25rem;
       margin-top: 1rem;
     }
   </style>
@@ -81,23 +105,22 @@
   <div class="container">
     <div class="column left">
       <form id="scriptForm">
-        <label>PROMPT TYPE</label>
-        <select class="prompt-input">
-          <option>Default</option>
-          <option>RomCom</option>
-          <option>Thriller</option>
-          <option>Fantasy</option>
-        </select>
+        <label for="input1">Main Idiot's Name:</label>
+        <input type="text" id="input1" class="prompt-input" required>
 
-        <input type="text" id="input1" class="prompt-input" placeholder="PROMPT 1" required>
-        <input type="text" id="input2" class="prompt-input" placeholder="PROMPT 2" required>
-        <input type="text" id="input3" class="prompt-input" placeholder="PROMPT 3" required>
-        <input type="text" id="input4" class="prompt-input" placeholder="PROMPT 4" required>
+        <label for="input2">Unhinged Sidekick:</label>
+        <input type="text" id="input2" class="prompt-input" required>
+
+        <label for="input3">Chaotic Location:</label>
+        <input type="text" id="input3" class="prompt-input" required>
+
+        <label for="input4">Cursed Object:</label>
+        <input type="text" id="input4" class="prompt-input" required>
 
         <label>OR SUBMIT YOUR OWN PROMPT</label>
         <textarea id="customPrompt" class="prompt-input" rows="3" placeholder="Write your own..."></textarea>
 
-        <button type="submit">Submit</button>
+        <button type="submit">Summon the Nonsense</button>
       </form>
     </div>
 
@@ -112,7 +135,8 @@
   </div>
 
   <footer>
-    <p>Footer - Example text - All rights reserved etc etc etc</p>
+    <img src="Asset 2@2x.png" alt="CanRightNow Logo" class="footer-above-logo">
+    <p>A cantrightnow.com creation. Yes.. us again</p>
     <img src="Asset 2@2x.png" alt="CanRightNow Logo" class="footer-logo">
   </footer>
 
@@ -133,7 +157,7 @@
 
       output.style.display = "block";
       logo.style.display = "none";
-      output.textContent = "Generating chaos...";
+      output.textContent = "Generating chaotic nonsense...";
 
       try {
         const response = await fetch("/.netlify/functions/generateScript", {
