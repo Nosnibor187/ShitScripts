@@ -6,7 +6,7 @@ exports.handler = async (event) => {
     const { script } = JSON.parse(event.body);
 
     const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage();
+    let page = pdfDoc.addPage();
     const { width, height } = page.getSize();
 
     // Load logo from public URL or hosted asset

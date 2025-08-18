@@ -1,6 +1,7 @@
 {
   "name": "shitscripts",
   "dependencies": {
-    "openai": "^4.26.0"
+    "openai": "^4.26.0",
+    "pdf-lib": "^1.17.1"
   }
 }
