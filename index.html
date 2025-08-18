@@ -6,68 +6,121 @@
   <title>Shit Scripts Generator</title>
   <style>
     body {
+      margin: 0;
+      padding: 0;
       font-family: monospace;
-      background-color: #111;
-      color: #f8f8f2;
+      background-color: #fdfaf3;
+      color: #000;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .container {
+      display: flex;
+      flex: 1;
+      height: 100%;
+    }
+    .column {
+      flex: 1;
       padding: 2rem;
-      max-width: 800px;
-      margin: auto;
-    }
-    h1 {
-      color: #ff79c6;
-    }
-    label {
-      display: block;
-      margin-top: 1rem;
-      color: #8be9fd;
-    }
-    input, button {
-      font-family: inherit;
-      font-size: 1rem;
-      padding: 0.5rem;
-      margin-top: 0.3rem;
-      width: 100%;
       box-sizing: border-box;
     }
+    .left, .right {
+      width: 25%;
+      background-color: #fdfaf3;
+    }
+    .center {
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      flex-direction: column;
+      text-align: center;
+    }
+    .logo {
+      max-width: 100%;
+      height: auto;
+    }
+    .script-output {
+      display: none;
+      white-space: pre-wrap;
+      text-align: left;
+      background: #fff;
+      padding: 2rem;
+      border: 1px solid #000;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .prompt-input {
+      margin-bottom: 1rem;
+      display: block;
+      width: 100%;
+      font-size: 1rem;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+    }
     button {
-      background-color: #50fa7b;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      background-color: #e0e0e0;
       border: none;
-      color: #000;
-      margin-top: 2rem;
       cursor: pointer;
     }
-    pre {
-      background-color: #282a36;
+    footer {
+      text-align: center;
       padding: 1rem;
-      margin-top: 2rem;
-      white-space: pre-wrap;
+    }
+    .footer-logo {
+      width: 40px;
+      margin-top: 1rem;
     }
   </style>
 </head>
 <body>
-  <h1>Shit Scripts Generator</h1>
+  <div class="container">
+    <div class="column left">
+      <form id="scriptForm">
+        <label>PROMPT TYPE</label>
+        <select class="prompt-input">
+          <option>Default</option>
+          <option>RomCom</option>
+          <option>Thriller</option>
+          <option>Fantasy</option>
+        </select>
 
-  <form id="scriptForm">
-    <label for="input1">Main Idiot's Name:</label>
-    <input type="text" id="input1" required>
+        <input type="text" id="input1" class="prompt-input" placeholder="PROMPT 1" required>
+        <input type="text" id="input2" class="prompt-input" placeholder="PROMPT 2" required>
+        <input type="text" id="input3" class="prompt-input" placeholder="PROMPT 3" required>
+        <input type="text" id="input4" class="prompt-input" placeholder="PROMPT 4" required>
 
-    <label for="input2">Unhinged Sidekick:</label>
-    <input type="text" id="input2" required>
+        <label>OR SUBMIT YOUR OWN PROMPT</label>
+        <textarea id="customPrompt" class="prompt-input" rows="3" placeholder="Write your own..."></textarea>
 
-    <label for="input3">Chaotic Location:</label>
-    <input type="text" id="input3" required>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
 
-    <label for="input4">Cursed Object:</label>
-    <input type="text" id="input4" required>
+    <div class="column center">
+      <img id="mainLogo" src="shitscriptslogo.png" alt="Shit Scripts Logo" class="logo">
+      <pre id="output" class="script-output"></pre>
+    </div>
 
-    <button type="submit">Summon the Nonsense</button>
-  </form>
+    <div class="column right">
+      <button id="downloadBtn">Download</button>
+    </div>
+  </div>
 
-  <pre id="output"></pre>
+  <footer>
+    <p>Footer - Example text - All rights reserved etc etc etc</p>
+    <img src="Asset 2@2x.png" alt="CanRightNow Logo" class="footer-logo">
+  </footer>
 
   <script>
     const form = document.getElementById("scriptForm");
     const output = document.getElementById("output");
+    const logo = document.getElementById("mainLogo");
+    const downloadBtn = document.getElementById("downloadBtn");
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -76,14 +129,17 @@
       const char2 = document.getElementById("input2").value;
       const location = document.getElementById("input3").value;
       const object = document.getElementById("input4").value;
+      const customPrompt = document.getElementById("customPrompt").value;
 
-      output.textContent = "Generating chaotic nonsense...";
+      output.style.display = "block";
+      logo.style.display = "none";
+      output.textContent = "Generating chaos...";
 
       try {
         const response = await fetch("/.netlify/functions/generateScript", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ char1, char2, location, object }),
+          body: JSON.stringify({ char1, char2, location, object, customPrompt }),
         });
 
         const data = await response.json();
@@ -92,6 +148,17 @@
         output.textContent = "Something exploded. Try again.";
         console.error(err);
       }
+    });
+
+    downloadBtn.addEventListener("click", () => {
+      const text = output.textContent;
+      const blob = new Blob([text], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "shitscript.txt";
+      a.click();
+      URL.revokeObjectURL(url);
     });
   </script>
 </body>
