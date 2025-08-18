@@ -76,8 +76,8 @@
     #downloadBtn {
       position: absolute;
       top: 50%;
-      left: 50%;
-      transform: translate(-30%, -50%);
+      right: 10%;
+      transform: translateY(-50%);
     }
     footer {
       text-align: center;
@@ -85,10 +85,6 @@
       position: relative;
     }
     .footer-logo {
-      width: 40px;
-      margin-top: 0.5rem;
-    }
-    .footer-above-logo {
       width: 60px;
       display: block;
       margin: 0 auto 1rem auto;
@@ -105,6 +101,14 @@
   <div class="container">
     <div class="column left">
       <form id="scriptForm">
+        <label for="promptType">Prompt Type:</label>
+        <select id="promptType" class="prompt-input">
+          <option value="default">Default</option>
+          <option value="romcom">RomCom</option>
+          <option value="thriller">Thriller</option>
+          <option value="fantasy">Fantasy</option>
+        </select>
+
         <label for="input1">Main Idiot's Name:</label>
         <input type="text" id="input1" class="prompt-input" required>
 
@@ -135,9 +139,8 @@
   </div>
 
   <footer>
-    <img src="Asset 2@2x.png" alt="CanRightNow Logo" class="footer-above-logo">
-    <p>A cantrightnow.com creation. Yes.. us again</p>
     <img src="Asset 2@2x.png" alt="CanRightNow Logo" class="footer-logo">
+    <p>A cantrightnow.com creation. Yes.. us again</p>
   </footer>
 
   <script>
